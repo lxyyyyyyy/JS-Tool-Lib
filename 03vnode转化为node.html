@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script>
+      //虚拟DOM转化为真实DOM
+      let vnode = {
+        tag: "DIV",
+        attrs: {
+          id: "app",
+        },
+        children: [
+          {
+            tag: "SPAN",
+            children: [{ tag: "A", children: [] }],
+          },
+          {
+            tag: "SPAN",
+            children: [
+              { tag: "A", children: [] },
+              { tag: "A", children: [] },
+            ],
+          },
+        ],
+      };
+      function render(vnode){
+        //如果节点是数字类型，则转化为字符串
+        if(typeof vnode === 'number'){
+            vnode = String(vnode)
+        }
+        //如果节点是字符串类型，说明是文本节点，
+        if(typeof vnode === 'string'){
+            return document.createTextNode(vnode)
+        }
+        //如果是一般节点，就按照tag类型创建element
+        let dom = document.createElement(vnode.tag);
+        //如果节点有属性
+        if(vnode.attrs){
+            //遍历属性，给创建的节点添加属性
+            Object.keys(vnode.attrs).forEach(key=>{
+                const value = vnode.attrs[key];
+                dom.setAttribute(key,value);
+            })
+        }
+        //如果有children，就进行递归,appendChild()
+        if(vnode.children){
+            vnode.children.forEach(child=>{
+                dom.appendChild(render(child))
+            })
+        }
+        return dom;
+      }
+    </script>
+  </head>
+  <body></body>
+</html>

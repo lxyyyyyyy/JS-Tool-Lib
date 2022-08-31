@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        //A instanceof B:表示A沿着原型链可以找到B，即A出现在B的原型链中
+        function myInstance(left,right){
+            let proto = left.__proto__;
+            while(proto!==null){
+                if(proto === right.prototype){
+                    return true
+                }
+                proto =proto.__proto__
+            }
+            return false
+        }
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

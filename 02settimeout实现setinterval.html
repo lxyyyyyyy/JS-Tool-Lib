@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //将timer定义再全局，可以使用window.clearTimeOut清除调用
+        let timer = null;
+        function interval(func,delay){
+            let interFunc = function(){
+                func.call(null)//将func放在window中
+                let timer = setTimeout(() => {
+                    interFunc()//递归调用自身
+                }, delay);
+
+            }
+            //触发递归
+            timer = setTimeout(() => {
+                interFunc()
+            }, delay);
+        }
+    </script>
+</body>
+</html>

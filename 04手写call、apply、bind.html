@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        //call/apply/bind都可以改变函数this的指向
+        //call传入的是参数列表，第一个为将要指向的上下文参数，其余是传入函数的参数。立即执行一次
+        //apply传入的是两个参数，第一个参数是将要指向的上下文参数，第二个参数为参数数组。立即执行一次
+        //bind传入的是参数列表，第一个是将要指向的上下文。不会立即执行，而是返回一个改变了this指向的一个函数，并且可以不一次性的传入所有参数。
+
+        //手写思路，先解构出上下文和其余参数，再在这个上下文中创建属性，并且执行一次
+        Function.prototype.call = function(context,...args){
+            context = context||window;
+            context.fn = this;
+            //执行一次,传入参数
+            let res = context.fn(...args);
+            //删除这个属性
+            delete context.fn;
+            return res;
+        }
+        //手写apply
+        Function.prototype.apply = function(context,args){
+            context = context||window
+            context.fn = this;
+            let res = args? context.fn(...args):context.fn();
+            delete context.fn;
+            return res
+        }
+        //手写bind：
+        //需要解构出context和args
+        //返回一个函数：
+        //需要判断这个返回的函数是否被用作构造函数
+        //用作构造函数，则无需改变上下文，作为普通函数使用，需要改变上下文
+        Function.prototype.bind = function(context,...args){
+            let func = this;
+            //可以传入新的值
+            function bindFunc(...arg){
+                //判断bindFunc是否被用作构造函数
+                //如果是被作为构造函数，this指向新创建的实例对象，因此可以在原型链中找到。this的指向不需要被改变，指向this
+                //如果被作为普通函数，this指向window，this只想可以被改变为context
+                if(this instanceof bindFunc){
+                    return func.apply(this,[...args,...arg])
+                }else{
+                    return func.apply(context,[...args,...arg])
+                }
+            }
+            return bindFunc;
+        }
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

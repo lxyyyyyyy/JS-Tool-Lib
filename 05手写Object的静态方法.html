@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        //手写Object.create()
+        //Object.create()
+        //表示创建一个新的对象，并且把对象添加到新对象的原型链中。表示新对象继承了该对象上的属性
+        //应用：寄生式组合继承，为了能够复用父类原型上的方法，子.prototype = 父.prototype。但是父子的constructor指向混乱。因此重新创建一个对象继承父.prototype上的方法
+        //子.prototype = Object.create(父.prototype)；
+
+        //实现思路
+        //可以传入的参数有两个：一个是对象或者函数（即要放在原型上的方法），另一个是{key:{value:xxx,enumerable:xxx}}对象形式的属性，将会被添加到新对象的属性中
+        //新建一个构造函数
+        //在构造函数中添加属性
+        //使用构造函数创建实例，并且返回这个实例
+        //如果有传入的属性，使用Object.defineProperties(obj,xx)向obj中添加属性
+        //如果没有传入原型，将obj的原型设置为null
+
+        Object.create = function(proto,propertyObject){
+            if(typeof proto !=='object' && typeof proto !== 'function'){
+                console.error('请传入一个对象或者函数')
+            }
+            //新建一个构造函数
+            function F(){};
+            //将传入的proto放入构造函数的原型上
+            F.prototype = proto;
+            //使用这个构造函数创建实例
+            let obj = new F();
+            //在obj中定义属性
+            if(propertyObject !== 'undefined'){
+                Object.defineProperties(obj,propertyObject);
+            }
+            if(proto == null){
+                obj.__proto__ = null;
+            }
+            return obj;
+        }
+
+        //手写Object.assign();
+        //将传入的对象合并为一个对象
+        Object.assign = function(...objs){
+            let res = {};
+            [...objs].forEach(obj=>{
+                for(let key in obj){
+                    if(obj.hasOwnProperty(key)){
+                        res[key] = obj[key]
+                    }
+                }
+            })
+            return res;
+        }
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

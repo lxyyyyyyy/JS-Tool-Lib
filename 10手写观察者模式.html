@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        //一个被观察者
+        class Subject{
+            constructor(){
+                //将所有观察者放到被观察者身上
+                this.observers = []
+            }
+            //一个方法用于向被观察者上添加观察者
+            add(observer){
+                this.observers.push(observer)
+            }
+            //从观察者数组中找到observer并删除
+            remove(observer){
+                let index = this.observers.findIndex(o=>o.name === observer.name)
+                this.observers.slice(index,1)
+            }
+            //通知观察者更新视图
+            notify(){
+                this.observers.forEach(observer=>{
+                    observer.update()
+                })
+            }
+        }
+        //定义一个观察者类
+        class Observer{
+            constructor(name){
+                this.name = name
+            }
+            update(){
+                console.log('去更新视图了啦')
+            }
+        }
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        //防抖：频繁触发某个事件，一段时间内没有再次触发，只执行最后一次
+        //如果一段时间内再次触发就重新开始即时
+
+        //用在搜索输入框
+
+        //手写
+        function debounce(fn,delay){
+            let timer
+            return function(){
+                if(timer)clearTimeout(timer)
+                timer = setTimeout(() => {
+                    fn.apply(this,arguments)
+                }, delay);
+            }
+        }
+
+        //节流：频繁触发变为少量触发，执行一次以后，只有超过设定时间才会触发下一次
+        //场景：一些会频繁触发的事件，比如onmousemove,鼠标滚动事件，窗口调整，抢购点击。出发频率很高，如果还伴随着后端发送请求，会对服务器造成压力
+        //一个时间戳版本
+        function throttle(fn,delay){
+            let previous = 0
+            return function(){
+                let now = Date.now()
+                if(now-previous > wait){
+                    fn.apply(this,arguments)
+                    previous = now;
+                }
+            }
+        }
+        //利用定时器实现
+        function throttle2(fn,delay){
+            let timer = null;
+            return function(){
+                if(!timer){
+                    timer = setTimeout(() => {
+                        fn.apply(this,arguments)
+                        timer = null
+                    }, delay);
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

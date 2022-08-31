@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        //实现思路，
+        //传入一个函数一个上下文参数，返回一个新的函数
+        //函数中判断是否计算过相同参数
+        function memo(func,thisArg){
+            let cache = {}
+            thisArg = thisArg || this
+            function inner(...args){
+                if(!cache[args]){
+                    cache[args] = func.apply(thisArg,[...args])
+                }
+                return cache[args]
+            }
+            return inner
+        }
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

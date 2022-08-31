@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        //和上一个手写axios差不多
+        const request = function({method,url,params,data}){
+            //传入的method可能是大写的也可能是小写的，统一改成大写
+            method = method.toUpperCase()
+           //首先根据传入的oarams拼接成完整的url：url+'?'+'key = val&key = val'
+            let paramsStr = ''
+            for(let key in params){
+                paramsStr += `${key}=${params[key]}&`
+            }
+            //删除最后一个&
+            paramsStr.slice(0,-1)
+            //返回一个promise，处理请求
+            return new Promise((resolve,reject)=>{
+                //创建xhr对象
+                const xhr = new XMLHttpRequest()
+                xhr.open(method,`${url}?${paramsStr}`);
+                //判断是否需要携带数据
+                if(method === 'POST' || method === 'PUT' || method === 'DELETE'){
+                    //设置请求头
+                    xhr.setRequestHeader('Content-type','application/json')
+                    //send
+                    xhr.send(JSON.stringify(data))
+                }else{
+                    //其他请求不设请求体
+                    xhr.send()
+                }
+
+                //设置请求返回类型，处理请求结果
+                xhr.responseType = 'json'
+                xhr.onreadystatechange = function(){
+                    if(xhr.readyState === 4){
+                        if(xhr.status >= 200 && xhr.status<300){
+                            resolve({
+                                status:xhr.status,
+                                message:xhr.statusText,
+                                body:xhr.response
+                            })
+                        }else{
+                            reject(new Error(xhr.responseText))
+                        }
+                    }
+                }
+            })
+        }
+    const request2 = function({method,url,params,data}){
+        
+    }
+   </script>
+</head>
+<body>
+    
+</body>
+</html>

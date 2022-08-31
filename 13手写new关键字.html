@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function myNew(Func,...args){
+            //创建了一个新的对象
+            let obj = {};
+            //实例的隐式原型指向构造函数的显示原型属性
+            obj.__proto__ = Func.prototype;
+            //返回值，改变上下文
+            let res = Func.apply(obj,args)
+            return res instanceof Object?res:obj
+
+        }
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
