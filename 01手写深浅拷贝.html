@@ -1,49 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script>
-        //手写浅拷贝
-        function ShallowCopy(obj){
-            if(typeof obj !== 'object')return;
-            let newObj = Array.isArray(obj)?[]:{}
-            for(let key in obj){
-                //判断key是否只在自身出现
-                if(obj.hasOwnProperty(key)){
-                    newObj[key] = obj[key]
-                }
-            }
-            return newObj;
+      //手写浅拷贝
+      function ShallowCopy(obj) {
+        if (typeof obj !== "object") return;
+        let newObj = Array.isArray(obj) ? [] : {};
+        for (let key in obj) {
+          //判断key是否只在自身出现
+          if (obj.hasOwnProperty(key)) {
+            newObj[key] = obj[key];
+          }
         }
-        //浅拷贝的其他方式：
-        //对象的浅拷贝Object.assign()
-        //数组的浅拷贝：arr.slice()/arr.concat();/[...arr]
+        return newObj;
+      }
+      //浅拷贝的其他方式：
+      //对象的浅拷贝Object.assign()
+      //数组的浅拷贝：arr.slice()/arr.concat();/[...arr]
 
-        //手写深拷贝
-        function DeepCopy(obj){
-            if(typeof obj !=="object")return;
-            let newObj = obj instanceof Array?[]:{};
-            for(let key in obj){
-                if(obj.hasOwnProperty(key)){
-                    newObj[key] = typeof obj[key] == 'object'? DeepCopy(obj[key]):obj[key];
-                }
-            }
-            return newObj;
+      //手写深拷贝
+      function DeepCopy(obj) {
+        if (typeof obj !== "object") return;
+        let newObj = obj instanceof Array ? [] : {};
+        for (let key in obj) {
+          if (obj.hasOwnProperty(key)) {
+            newObj[key] =
+              typeof obj[key] == "object" ? DeepCopy(obj[key]) : obj[key];
+          }
         }
-        //其他深拷贝的方式：JSON.parse(JSON.stringify(xxx));先转化成json字符串，再转化为对象
-        //使用lodash的cloneDeep
+        return newObj;
+      }
+      //其他深拷贝的方式：JSON.parse(JSON.stringify(xxx));先转化成json字符串，再转化为对象
+      //使用lodash的cloneDeep
 
-        //缺陷和进一步优化：如果对象中存在循环引用，不可以使用深拷贝
-        //解决，使用map.set(obj,newObj)缓存结果,提前判断是否缓存过newObj
+      //缺陷和进一步优化：如果对象中存在循环引用，不可以使用深拷贝
+      //解决，使用map.set(obj,newObj)缓存结果,提前判断是否缓存过newObj
 
-        //使用场景：修改数据的时候，通常层级嵌套比较深，如果用户修改完数据但是点击了取消，或者关闭了修改框
-        //此时如果是浅拷贝，数据已经发生变化，因此要使用深拷贝
+      //如果循环引用，不能够深拷贝
+      //解决循环引用
+      function DeepCopy2(obj, map = new Map()) {
+        if (typeof obj !== "object") return;
+        let cache = map.get(obj);
+        if (cache) {
+          return cache;
+        }
+        let newObj = obj instanceof Array ? [] : {};
+        map.set(obj, newObj);
+        for (let key in obj) {
+          if (obj.hasOwnProperty(key)) {
+            newObj[key] =
+              typeof obj[key] == "object" ? DeepCopy2(obj[key], map) : obj[key];
+          }
+        }
+        return newObj;
+      }
+      //进一步优化，遍历优化，使用for in循环不光会遍历当前对象的属性，还会遍历对象的原型上的属性
+      //因此如果是数组，就直接foreach，如果是对象，先用Object.keys()获取到对象中key组成的数组，然后再使用foreach遍历
+      const obj = {
+        a: 1,
+        b: ["e", "f", "g"],
+        c: { h: 10 },
+        d: function () {},
+      };
+      obj.b.push(obj.c);
+      obj.c.j = obj.b;
+      console.log(obj);
+      console.log(DeepCopy2(obj));
+
+      //使用场景：修改数据的时候，通常层级嵌套比较深，如果用户修改完数据但是点击了取消，或者关闭了修改框
+      //此时如果是浅拷贝，数据已经发生变化，因此要使用深拷贝
     </script>
-</head>
-<body>
-    
-</body>
+  </head>
+  <body></body>
 </html>
